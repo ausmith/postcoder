@@ -1,0 +1,21 @@
+# vi: set ft=dockerfile
+FROM alpine:3.8
+
+MAINTAINER Aaron Goldsmith "<goldsmithaaron@gmail.com>"
+
+RUN apk add --no-cache python py-pip
+
+COPY requirements.txt /opt/postcoder/requirements.txt
+
+COPY test_requirements.txt /opt/postcoder/test_requirements.txt
+
+WORKDIR /opt/postcoder/
+
+RUN pip install -r requirements.txt && \
+    pip install -r test_requirements.txt
+
+COPY . /opt/postcoder/
+
+RUN python setup.py develop
+
+ENTRYPOINT ["pytest"]
